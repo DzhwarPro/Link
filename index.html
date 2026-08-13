@@ -222,26 +222,26 @@
     <!-- ناوەڕۆکی سەرەکی -->
     <div class="main-wrapper">
         <div class="container">
-            <h1>Kurd.System</h1>
-            <div class="subtitle">پەیوەندیم پێوە بکە</div>
+            <h1 id="siteName">Kurd.System</h1>
+            <div class="subtitle" id="siteBio">پەیوەندیم پێوە بکە</div>
 
-            <div class="social-links">
-                <a href="https://www.facebook.com/share/1Cx7W65eV3/" target="_blank" class="social-btn facebook">
+            <div class="social-links" id="socialLinks">
+                <a href="https://www.facebook.com/share/1Cx7W65eV3/" target="_blank" class="social-btn facebook" id="btnFacebook">
                     <i class="fab fa-facebook-f"></i> فەیسبووک
                 </a>
-                <a href="#" target="_blank" class="social-btn snapchat">
+                <a href="#" target="_blank" class="social-btn snapchat" id="btnSnapchat" style="display:none">
                     <i class="fab fa-snapchat-ghost"></i> سناپچات
                 </a>
-                <a href="https://www.instagram.com/kurd.system2026?igsh=MW1tdTV6ZnAyaDBqdw==" target="_blank" class="social-btn instagram">
+                <a href="https://www.instagram.com/kurd.system2026?igsh=MW1tdTV6ZnAyaDBqdw==" target="_blank" class="social-btn instagram" id="btnInstagram">
                     <i class="fab fa-instagram"></i> ئینستاگرام
                 </a>
-                <a href="https://www.tiktok.com/@kurd.system?_r=1&_t=ZS-98pkDkDfIeK" target="_blank" class="social-btn tiktok">
+                <a href="https://www.tiktok.com/@kurd.system?_r=1&_t=ZS-98pkDkDfIeK" target="_blank" class="social-btn tiktok" id="btnTiktok">
                     <i class="fab fa-tiktok"></i> تیکتۆک
                 </a>
-                <a href="#" target="_blank" class="social-btn telegram">
+                <a href="#" target="_blank" class="social-btn telegram" id="btnTelegram" style="display:none">
                     <i class="fab fa-telegram-plane"></i> تلێگرام
                 </a>
-                <a href="#" target="_blank" class="social-btn whatsapp">
+                <a href="#" target="_blank" class="social-btn whatsapp" id="btnWhatsapp" style="display:none">
                     <i class="fab fa-whatsapp"></i> واتسئەپ
                 </a>
             </div>
@@ -250,6 +250,61 @@
             <div class="footer-text">KURD.SYSTEM © 2026</div>
         </div>
     </div>
+
+    <script>
+        // ===== ڕێکخستنەکان - هەمان شتی admin =====
+        const JSONBIN_ID = "BIN_ID_لێرە_دابنێ";
+        const JSONBIN_API_KEY = "$2a$10$KEY_لێرە_دابنێ";
+        // ============================================
+
+        async function loadFromAdmin() {
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
+                    headers: {"X-Master-Key": JSONBIN_API_KEY}
+                });
+                const json = await res.json();
+                const data = json.record;
+
+                // ئەگەر داتای "default" هەبێت، لینکەکان نوێ بکەوە
+                if (data && data.default) {
+                    const d = data.default;
+
+                    if (d.name) document.getElementById('siteName').textContent = d.name;
+                    if (d.bio) document.getElementById('siteBio').textContent = d.bio;
+
+                    if (d.facebook) {
+                        document.getElementById('btnFacebook').href = d.facebook;
+                        document.getElementById('btnFacebook').style.display = 'flex';
+                    }
+                    if (d.snapchat) {
+                        document.getElementById('btnSnapchat').href = d.snapchat;
+                        document.getElementById('btnSnapchat').style.display = 'flex';
+                    }
+                    if (d.instagram) {
+                        document.getElementById('btnInstagram').href = d.instagram;
+                        document.getElementById('btnInstagram').style.display = 'flex';
+                    }
+                    if (d.tiktok) {
+                        document.getElementById('btnTiktok').href = d.tiktok;
+                        document.getElementById('btnTiktok').style.display = 'flex';
+                    }
+                    if (d.telegram) {
+                        document.getElementById('btnTelegram').href = d.telegram;
+                        document.getElementById('btnTelegram').style.display = 'flex';
+                    }
+                    if (d.whatsapp) {
+                        document.getElementById('btnWhatsapp').href = d.whatsapp;
+                        document.getElementById('btnWhatsapp').style.display = 'flex';
+                    }
+                }
+            } catch(e) {
+                // ئەگەر هەڵە هەبوو، لینکە ڕەسەنەکان دەمێننەوە (هیچ ناگۆڕێت)
+                console.log("Admin data not loaded, using default links");
+            }
+        }
+
+        loadFromAdmin();
+    </script>
 
 </body>
 </html>
