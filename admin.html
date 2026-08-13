@@ -3,321 +3,523 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Kurd.System</title>
+    <title>Kurd.System - Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{background:#050505;min-height:100vh;padding:30px 20px;font-family:'Tajawal',sans-serif;color:#fff}
-        .admin-container{max-width:700px;margin:0 auto}
-        h1{color:#d4af37;font-size:28px;text-align:center;margin-bottom:30px}
-        .section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:20px}
-        .section h2{color:#d4af37;font-size:18px;margin-bottom:15px}
-        .field{margin-bottom:15px}
-        .field label{color:#aaa;display:block;margin-bottom:5px;font-size:14px}
-        .field input,.field select{width:100%;padding:12px 15px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-family:'Tajawal';font-size:14px;outline:none}
-        .field input:focus,.field select:focus{border-color:#d4af37}
-        .btn{padding:15px;border:none;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;font-family:'Tajawal';width:100%;transition:all 0.3s}
-        .btn-save{background:#d4af37;color:#000;margin-top:10px}
-        .btn-save:hover{background:#b8962e}
-        .btn-add{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.4);margin-bottom:15px}
-        .btn-add:hover{background:rgba(212,175,55,0.3)}
-        .btn-remove{background:rgba(255,68,68,0.2);color:#ff4444;border:1px solid rgba(255,68,68,0.4);padding:8px 15px;font-size:14px;width:auto;margin-top:5px}
-        .btn-remove:hover{background:rgba(255,68,68,0.3)}
-        .user-list{max-height:400px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:15px}
-        .user-item{padding:15px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
-        .user-item:hover{background:rgba(212,175,55,0.1)}
-        .user-item.active{background:rgba(212,175,55,0.2);border-right:3px solid #d4af37}
-        .user-item .user-info{flex:1}
-        .user-item .user-name{font-size:16px;font-weight:700;margin-bottom:3px;color:#ccc}
-        .user-item.active .user-name{color:#d4af37}
-        .user-item .user-bio{font-size:12px;color:#888}
-        .del-btn{background:none;border:none;color:#ff4444;cursor:pointer;font-size:18px;padding:5px 10px;border-radius:8px;transition:all 0.2s}
-        .del-btn:hover{background:rgba(255,68,68,0.1)}
-        .toast{position:fixed;top:20px;right:50%;transform:translateX(50%);background:#d4af37;color:#000;padding:12px 30px;border-radius:50px;font-weight:700;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none}
-        .toast.show{opacity:1}
-        .counter{text-align:center;color:#666;font-size:13px;margin-bottom:20px}
-        .login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;z-index:500;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:15px}
-        .login-overlay.hidden{display:none}
-        .login-overlay input{padding:15px 20px;border-radius:12px;border:1px solid rgba(212,175,55,0.4);background:rgba(255,255,255,0.05);color:#fff;font-family:'Tajawal';font-size:16px;outline:none;width:280px;text-align:center}
-        .login-overlay button{padding:15px 40px;border:none;border-radius:12px;background:#d4af37;color:#000;font-weight:900;font-size:16px;cursor:pointer;font-family:'Tajawal'}
-        .social-buttons-container{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
-        .social-button-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px;margin-bottom:12px}
-        .social-button-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .social-button-fields .field{margin-bottom:0}
-        .icon-selector{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-        .icon-option{width:40px;height:40px;border-radius:8px;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:18px}
-        .icon-option:hover{border-color:#d4af37}
-        .icon-option.selected{border-color:#d4af37;background:rgba(212,175,55,0.2)}
-        .color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-        .color-option{width:35px;height:35px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s}
-        .color-option:hover{transform:scale(1.1)}
-        .color-option.selected{border-color:#fff}
-        .preview-box{background:rgba(0,0,0,0.3);border-radius:12px;padding:15px;margin-top:10px}
-        .preview-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:15px 20px;border-radius:12px;color:#fff;font-weight:700;font-size:14px;border:2px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,var(--c1),var(--c2)) border-box}
-        .preview-btn i{font-size:18px;width:24px;text-align:center}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            background: #050505;
+            min-height: 100vh;
+            font-family: 'Tajawal', sans-serif;
+            color: #fff;
+        }
+
+        .gradient-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #feca57;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 700;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.4);
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #48dbfb;
+            box-shadow: 0 0 0 3px rgba(72, 219, 251, 0.2);
+        }
+
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #48dbfb, #1877F2);
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: #fff;
+            padding: 8px 16px;
+            font-size: 13px;
+            width: auto;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .link-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 16px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .link-item i {
+            font-size: 24px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .link-info {
+            flex: 1;
+        }
+
+        .link-info .name {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .link-info .url {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #48dbfb;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert-success {
+            background: rgba(37, 211, 102, 0.2);
+            border: 1px solid #25D366;
+            color: #25D366;
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .icon-preview {
+            display: inline-block;
+            font-size: 24px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Login Section */
+        .login-container {
+            max-width: 400px;
+            margin: 80px auto;
+            text-align: center;
+        }
+
+        .login-icon {
+            font-size: 80px;
+            color: #48dbfb;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div class="login-overlay" id="loginOverlay">
-        <h1 style="color:#d4af37;margin-bottom:10px">🔒 چوونەژوورەوە</h1>
-        <input type="password" id="loginPass" placeholder="وشەی نهێنی بنووسە">
-        <button onclick="checkLogin()">چوونەژوورەوە</button>
-    </div>
+    <div class="gradient-bg"></div>
 
-    <div class="toast" id="toast"></div>
-
-    <div class="admin-container" id="adminContent" style="display:none">
-        <h1>⚙️ پانێڵی بەڕێوەبردن</h1>
-        <div class="counter" id="userCounter"></div>
-
-        <div class="section">
-            <h2>📋 لیستی بەکارهێنەران</h2>
-            <div class="user-list" id="userList"></div>
-            <button class="btn btn-add" onclick="newUser()">➕ بەکارهێنەری نوێ</button>
-        </div>
-
-        <div class="section" id="editSection" style="display:none">
-            <h2 id="editTitle">✏️ دەستکاری</h2>
-            <div class="field"><label>ناوی بەکارهێنەر (ID)</label><input type="text" id="fUser" placeholder="navi_user"></div>
-            <div class="field"><label>ناوی پیشاندان</label><input type="text" id="fName"></div>
-            <div class="field"><label>وەسف / بایۆ</label><input type="text" id="fBio"></div>
+    <div class="wrapper">
+        <div class="container">
+            <a href="index.html" class="back-link"><i class="fas fa-arrow-right"></i> گەڕانەوە بۆ ماڵپەڕ</a>
             
-            <div class="social-buttons-container">
-                <h2 style="font-size:16px;margin-bottom:15px;color:#d4af37">🔗 دوگمەکانی سۆشیاڵ</h2>
-                <div id="socialButtonsList"></div>
-                <button class="btn btn-add" onclick="addSocialButton()" style="margin-top:10px">➕ زیادکردنی دوگمەی نوێ</button>
+            <!-- بەشی چوونەژوورەوە -->
+            <div id="loginSection">
+                <div class="login-container">
+                    <div class="login-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h1>چوونەژوورەوە</h1>
+                    <p class="subtitle">تکایە وشەی نهێنی بنووسە بۆ چوونە ژوورەوە بۆ پانێڵی بەڕێوەبەر</p>
+                    
+                    <div class="card">
+                        <div id="loginAlert" class="alert alert-error"></div>
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label><i class="fas fa-lock"></i> وشەی نهێنی</label>
+                                <input type="password" id="password" placeholder="وشەی نهێنی..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt"></i> چوونەژوورەوە
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            
-            <button class="btn btn-save" onclick="saveUser()">💾 پاشەکەوتکردن</button>
+
+            <!-- بەشی پانێڵ -->
+            <div id="adminPanel" class="hidden">
+                <h1>پانێڵی بەڕێوەبەر</h1>
+                <p class="subtitle">بەڕێوەبردنی ماڵپەڕەکەت</p>
+
+                <div id="alert" class="alert alert-success"></div>
+
+                <!-- ڕێکخستنەکان -->
+                <div class="card">
+                    <h2><i class="fas fa-cog"></i> ڕێکخستنە گشتییەکان</h2>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label>ناوی سیستەم (لە سەرووی پەڕە)</label>
+                            <input type="text" id="systemName" placeholder="وەک: Kurd.System" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ناونیشانی ژێرەوە</label>
+                            <input type="text" id="systemSubtitle" placeholder="وەک: پەیوەندیم پێوە بکە" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ناونیشانی فووتەر</label>
+                            <input type="text" id="footerText" placeholder="وەک: KURD.SYSTEM © 2026">
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> هەڵگرتنی ڕێکخستنەکان
+                        </button>
+                    </form>
+                </div>
+
+                <!-- فۆرمی زیادکردنی لینک -->
+                <div class="card">
+                    <h2><i class="fas fa-plus-circle"></i> زیادکردنی لینکی نوێ</h2>
+                    <form id="addLinkForm">
+                        <div class="form-group">
+                            <label>ناوی پلاتفۆرم</label>
+                            <input type="text" id="linkName" placeholder="وەک: یوتیوب، تویتەر..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>لینک</label>
+                            <input type="url" id="linkUrl" placeholder="https://..." required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>جۆری ئایکۆن</label>
+                            <select id="linkIcon" required>
+                                <option value="fa-facebook-f" data-color="#1877F2">فەیسبووک</option>
+                                <option value="fa-instagram" data-color="#E4405F">ئینستاگرام</option>
+                                <option value="fa-tiktok" data-color="#fff">تیکتۆک</option>
+                                <option value="fa-youtube" data-color="#ff0000">یوتیوب</option>
+                                <option value="fa-twitter" data-color="#1DA1F2">تویتەر</option>
+                                <option value="fa-telegram-plane" data-color="#0088cc">تلێگرام</option>
+                                <option value="fa-whatsapp" data-color="#25D366">واتسئەپ</option>
+                                <option value="fa-snapchat-ghost" data-color="#FFFC00">سناپچات</option>
+                                <option value="fa-linkedin-in" data-color="#0A66C2">لینکد ئین</option>
+                                <option value="fa-discord" data-color="#5865F2">دیسکۆرد</option>
+                                <option value="fa-twitch" data-color="#9146FF">تویچ</option>
+                                <option value="fa-github" data-color="#fff">گیت هەب</option>
+                                <option value="fa-snapchat" data-color="#FFFC00">سناپچات (2)</option>
+                                <option value="fa-facebook-messenger" data-color="#0084FF">مەسنجەر</option>
+                            </select>
+                            <span id="iconPreview" class="icon-preview"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>ڕەنگی سەرەکی</label>
+                            <input type="color" id="linkColor" value="#48dbfb" style="height: 50px; cursor: pointer;">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> زیادکردن
+                        </button>
+                    </form>
+                </div>
+
+                <!-- لیستی لینکەکان -->
+                <div class="card">
+                    <h2><i class="fas fa-list"></i> لینکە زیادکراوەکان</h2>
+                    <div id="linkList" class="link-list">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox" style="font-size:48px; margin-bottom:15px; display:block;"></i>
+                            هیچ لینکێک زیاد نەکراوە
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="logout()" class="btn btn-danger" style="margin-top: 20px;">
+                    <i class="fas fa-sign-out-alt"></i> دەرچوون
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        const JSONBIN_ID = "BIN_ID_لێرە_دابنێ";
-        const JSONBIN_API_KEY = "$2a$10$KEY_لێرە_دابنێ";
-        const ADMIN_PASSWORD = "kurd2026";
+        const CORRECT_PASSWORD = 'Dzhwar1999$$$';
+        const SESSION_KEY = 'adminLoggedIn';
+        const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-        let allData = {};
-        let editingUser = null;
-        let currentSocialButtons = [];
+        const loginSection = document.getElementById('loginSection');
+        const adminPanel = document.getElementById('adminPanel');
+        const loginForm = document.getElementById('loginForm');
+        const settingsForm = document.getElementById('settingsForm');
+        const addLinkForm = document.getElementById('addLinkForm');
+        const linkList = document.getElementById('linkList');
+        const alertBox = document.getElementById('alert');
+        const loginAlert = document.getElementById('loginAlert');
+        const iconSelect = document.getElementById('linkIcon');
+        const iconPreview = document.getElementById('iconPreview');
 
-        const availableIcons = [
-            {name: 'facebook', icon: 'fab fa-facebook-f', color: '#1877F2'},
-            {name: 'instagram', icon: 'fab fa-instagram', color: '#E4405F'},
-            {name: 'tiktok', icon: 'fab fa-tiktok', color: '#fff'},
-            {name: 'telegram', icon: 'fab fa-telegram-plane', color: '#0088cc'},
-            {name: 'whatsapp', icon: 'fab fa-whatsapp', color: '#25D366'},
-            {name: 'snapchat', icon: 'fab fa-snapchat-ghost', color: '#FFFC00'},
-            {name: 'youtube', icon: 'fab fa-youtube', color: '#ff0000'},
-            {name: 'twitter', icon: 'fab fa-twitter', color: '#1DA1F2'},
-            {name: 'linkedin', icon: 'fab fa-linkedin-in', color: '#0A66C2'},
-            {name: 'github', icon: 'fab fa-github', color: '#fff'},
-            {name: 'discord', icon: 'fab fa-discord', color: '#5865F2'},
-            {name: 'twitch', icon: 'fab fa-twitch', color: '#9146FF'},
-            {name: 'spotify', icon: 'fab fa-spotify', color: '#1DB954'},
-            {name: 'globe', icon: 'fas fa-globe', color: '#48dbfb'},
-            {name: 'envelope', icon: 'fas fa-envelope', color: '#ff6b6b'},
-            {name: 'phone', icon: 'fas fa-phone', color: '#25D366'},
-            {name: 'link', icon: 'fas fa-link', color: '#d4af37'}
-        ];
-
-        const availableColors = [
-            '#1877F2', '#E4405F', '#fff', '#0088cc', '#25D366', '#FFFC00',
-            '#ff0000', '#1DA1F2', '#0A66C2', '#5865F2', '#9146FF', '#1DB954',
-            '#d4af37', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'
-        ];
-
-        function checkLogin() {
-            const pass = document.getElementById("loginPass").value;
-            if (pass === ADMIN_PASSWORD) {
-                document.getElementById("loginOverlay").classList.add("hidden");
-                document.getElementById("adminContent").style.display = "block";
-                loadData();
-            } else {
-                showToast("❌ وشەی نهێنی هەڵەیە!");
-            }
-        }
-
-        async function loadData() {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-                    headers: {"X-Master-Key": JSONBIN_API_KEY}
-                });
-                const json = await res.json();
-                allData = json.record || {};
-                
-                if (!allData.default) {
-                    allData.default = {
-                        name: "Kurd.System",
-                        bio: "پەیوەندیم پێوە بکە",
-                        buttons: [
-                            {id: 'btn1', name: 'فەیسبووک', icon: 'fab fa-facebook-f', color: '#1877F2', url: 'https://www.facebook.com/share/1Cx7W65eV3/'},
-                            {id: 'btn2', name: 'ئینستاگرام', icon: 'fab fa-instagram', color: '#E4405F', url: 'https://www.instagram.com/kurd.system2026'},
-                            {id: 'btn3', name: 'تیکتۆک', icon: 'fab fa-tiktok', color: '#fff', url: 'https://www.tiktok.com/@kurd.system'}
-                        ]
-                    };
-                }
-                renderUserList();
-            } catch(e) {
-                showToast("❌ هەڵە لە بارکردن!");
-            }
-        }
-
-        async function saveToServer() {
-            try {
-                await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}`, {
-                    method: "PUT",
-                    headers: {"Content-Type":"application/json","X-Master-Key":JSONBIN_API_KEY},
-                    body: JSON.stringify(allData)
-                });
+        // پشکنینی نیشانەی چوونەژوورەوە
+        function checkSession() {
+            const session = JSON.parse(localStorage.getItem(SESSION_KEY) || '{}');
+            if (session.loggedIn && (Date.now() - session.time) < SESSION_DURATION) {
+                loginSection.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                loadSettings();
+                loadLinks();
                 return true;
-            } catch(e) { return false; }
+            }
+            return false;
         }
 
-        function renderUserList() {
-            const list = document.getElementById("userList");
-            const users = Object.keys(allData);
-            document.getElementById("userCounter").textContent = `📊 کۆی بەکارهێنەران: ${users.length}`;
-            list.innerHTML = "";
+        // چوونەژوورەوە
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pass = document.getElementById('password').value;
             
-            users.forEach(u => {
-                const div = document.createElement("div");
-                div.className = "user-item" + (editingUser === u ? " active" : "");
-                const userData = allData[u] || {};
-                const displayName = u === "default" ? "🌐 پەڕەی سەرەکی" : `👤 ${userData.name || u}`;
-                
-                div.innerHTML = `<div class="user-info"><div class="user-name">${displayName}</div><div class="user-bio">${userData.bio || ''}</div></div>`;
-                
-                if (u !== "default") {
-                    const del = document.createElement("button");
-                    del.className = "del-btn";
-                    del.innerHTML = "🗑️";
-                    del.onclick = (e) => { e.stopPropagation(); deleteUser(u); };
-                    div.appendChild(del);
-                }
-                
-                div.onclick = () => editUser(u);
-                list.appendChild(div);
-            });
-        }
-
-        function newUser() {
-            editingUser = "__new__";
-            currentSocialButtons = [];
-            document.getElementById("editSection").style.display = "block";
-            document.getElementById("editTitle").textContent = "➕ بەکارهێنەری نوێ";
-            document.getElementById("fUser").value = "";
-            document.getElementById("fUser").disabled = false;
-            document.getElementById("fName").value = "";
-            document.getElementById("fBio").value = "";
-            renderSocialButtons();
-            renderUserList();
-        }
-
-        function editUser(user) {
-            editingUser = user;
-            const data = allData[user] || {};
-            document.getElementById("editSection").style.display = "block";
-            document.getElementById("editTitle").textContent = user === "default" ? "✏️ دەستکاری پەڕەی سەرەکی" : `✏️ دەستکاری: ${data.name || user}`;
-            document.getElementById("fUser").value = user === "default" ? "" : user;
-            document.getElementById("fUser").disabled = user === "default";
-            document.getElementById("fName").value = data.name || "";
-            document.getElementById("fBio").value = data.bio || "";
-            currentSocialButtons = data.buttons ? [...data.buttons] : [];
-            renderSocialButtons();
-            renderUserList();
-        }
-
-        function addSocialButton() {
-            currentSocialButtons.push({
-                id: 'btn_' + Date.now(),
-                name: '',
-                icon: 'fas fa-link',
-                color: '#d4af37',
-                url: ''
-            });
-            renderSocialButtons();
-        }
-
-        function removeSocialButton(index) {
-            currentSocialButtons.splice(index, 1);
-            renderSocialButtons();
-        }
-
-        function updateSocialButton(index, field, value) {
-            currentSocialButtons[index][field] = value;
-            renderSocialButtons();
-        }
-
-        function renderSocialButtons() {
-            const container = document.getElementById("socialButtonsList");
-            container.innerHTML = "";
-            
-            currentSocialButtons.forEach((btn, index) => {
-                const div = document.createElement("div");
-                div.className = "social-button-item";
-                div.innerHTML = `
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-                        <span style="color:#d4af37;font-weight:700">دوگمەی ${index + 1}</span>
-                        <button class="btn btn-remove" onclick="removeSocialButton(${index})">🗑️ سڕینەوە</button>
-                    </div>
-                    <div class="social-button-fields">
-                        <div class="field"><label>ناو</label><input type="text" value="${btn.name}" onchange="updateSocialButton(${index}, 'name', this.value)"></div>
-                        <div class="field"><label>لینک</label><input type="url" value="${btn.url}" onchange="updateSocialButton(${index}, 'url', this.value)"></div>
-                    </div>
-                    <div class="field" style="margin-top:10px"><label>ئایکۆن</label><div class="icon-selector">${availableIcons.map(ic => `<div class="icon-option ${btn.icon === ic.icon ? 'selected' : ''}" onclick="updateSocialButton(${index}, 'icon', '${ic.icon}')"><i class="${ic.icon}" style="color:${ic.color}"></i></div>`).join('')}</div></div>
-                    <div class="field" style="margin-top:10px"><label>ڕەنگ</label><div class="color-picker">${availableColors.map(c => `<div class="color-option ${btn.color === c ? 'selected' : ''}" style="background:${c}" onclick="updateSocialButton(${index}, 'color', '${c}')"></div>`).join('')}</div></div>
-                    <div class="preview-box"><div style="color:#888;font-size:11px;margin-bottom:5px">پێشبینین:</div><div class="preview-btn" style="--c1:${btn.color};--c2:${btn.color}"><i class="${btn.icon}" style="color:${btn.color}"></i> ${btn.name || 'ناوی دوگمە'}</div></div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        async function saveUser() {
-            let user = document.getElementById("fUser").value.trim();
-            if (!user && editingUser === "__new__") { showToast("❌ ناوی بەکارهێنەر بنووسە!"); return; }
-            if (!user) user = "default";
-
-            const validButtons = currentSocialButtons.filter(btn => btn.name && btn.url);
-            allData[user] = {
-                name: document.getElementById("fName").value,
-                bio: document.getElementById("fBio").value,
-                buttons: validButtons
-            };
-
-            const ok = await saveToServer();
-            if (ok) {
-                editingUser = user;
-                renderUserList();
-                showToast("✅ پاشەکەوت کرا!");
+            if (pass === CORRECT_PASSWORD) {
+                localStorage.setItem(SESSION_KEY, JSON.stringify({
+                    loggedIn: true,
+                    time: Date.now()
+                }));
+                loginSection.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                loadSettings();
+                loadLinks();
             } else {
-                showToast("❌ هەڵە لە پاشەکەوت!");
+                loginAlert.textContent = 'وشەی نهێنی هەڵەیە!';
+                loginAlert.style.display = 'block';
+                setTimeout(() => { loginAlert.style.display = 'none'; }, 3000);
             }
-        }
-
-        async function deleteUser(user) {
-            if (!confirm(`دڵنیایت لە سڕینەوەی "${user}"؟`)) return;
-            delete allData[user];
-            const ok = await saveToServer();
-            if (ok) {
-                editingUser = null;
-                document.getElementById("editSection").style.display = "none";
-                renderUserList();
-                showToast("🗑️ سڕایەوە!");
-            }
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById("toast");
-            t.textContent = msg;
-            t.classList.add("show");
-            setTimeout(() => t.classList.remove("show"), 2500);
-        }
-
-        document.getElementById("loginPass").addEventListener("keypress", (e) => {
-            if (e.key === "Enter") checkLogin();
         });
+
+        // دەرچوون
+        function logout() {
+            localStorage.removeItem(SESSION_KEY);
+            location.reload();
+        }
+
+        // بارکردنی ڕێکخستنەکان
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+            document.getElementById('systemName').value = settings.name || 'Kurd.System';
+            document.getElementById('systemSubtitle').value = settings.subtitle || 'پەیوەندیم پێوە بکە';
+            document.getElementById('footerText').value = settings.footer || 'KURD.SYSTEM © 2026';
+        }
+
+        // هەڵگرتنی ڕێکخستنەکان
+        settingsForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const settings = {
+                name: document.getElementById('systemName').value,
+                subtitle: document.getElementById('systemSubtitle').value,
+                footer: document.getElementById('footerText').value
+            };
+            localStorage.setItem('siteSettings', JSON.stringify(settings));
+            showAlert('ڕێکخستنەکان بە سەرکەوتوویی هەڵگیران!');
+        });
+
+        // پیشاندانی ئایکۆن
+        iconSelect.addEventListener('change', updateIconPreview);
+        updateIconPreview();
+
+        function updateIconPreview() {
+            const selected = iconSelect.options[iconSelect.selectedIndex];
+            const icon = selected.value;
+            const color = selected.dataset.color;
+            iconPreview.innerHTML = `<i class="fab ${icon}" style="color:${color}"></i>`;
+        }
+
+        // بارکردنی لینکەکان
+        function loadLinks() {
+            const links = JSON.parse(localStorage.getItem('customSocialLinks') || '[]');
+            
+            if (links.length === 0) {
+                linkList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox" style="font-size:48px; margin-bottom:15px; display:block;"></i>
+                        هیچ لینکێک زیاد نەکراوە
+                    </div>
+                `;
+                return;
+            }
+
+            linkList.innerHTML = links.map((link, index) => `
+                <div class="link-item">
+                    <i class="fab ${link.icon}" style="color: ${link.color}"></i>
+                    <div class="link-info">
+                        <div class="name">${link.name}</div>
+                        <div class="url">${link.url}</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteLink(${index})">
+                        <i class="fas fa-trash"></i> سڕینەوە
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // زیادکردنی لینکی نوێ
+        addLinkForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('linkName').value;
+            const url = document.getElementById('linkUrl').value;
+            const icon = document.getElementById('linkIcon').value;
+            const color = document.getElementById('linkColor').value;
+
+            const links = JSON.parse(localStorage.getItem('customSocialLinks') || '[]');
+            links.push({ name, url, icon, color });
+            localStorage.setItem('customSocialLinks', JSON.stringify(links));
+
+            showAlert(`"${name}" بە سەرکەوتوویی زیاد کرا!`);
+            addLinkForm.reset();
+            document.getElementById('linkColor').value = '#48dbfb';
+            loadLinks();
+        });
+
+        // سڕینەوەی لینک
+        function deleteLink(index) {
+            if (!confirm('دڵنیایت لە سڕینەوەی ئەم لینکە؟')) return;
+            
+            const links = JSON.parse(localStorage.getItem('customSocialLinks') || '[]');
+            const deleted = links.splice(index, 1)[0];
+            localStorage.setItem('customSocialLinks', JSON.stringify(links));
+            
+            showAlert(`"${deleted.name}" سڕایەوە!`);
+            loadLinks();
+        }
+
+        function showAlert(message) {
+            alertBox.textContent = message;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 3000);
+        }
+
+        // بارکردنی سەرەتایی
+        checkSession();
     </script>
 </body>
 </html>
