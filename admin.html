@@ -9,25 +9,29 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{background:#050505;min-height:100vh;padding:30px 20px;font-family:'Tajawal',sans-serif;color:#fff}
-        .admin-container{max-width:600px;margin:0 auto}
+        .admin-container{max-width:700px;margin:0 auto}
         h1{color:#d4af37;font-size:28px;text-align:center;margin-bottom:30px}
         .section{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:25px;margin-bottom:20px}
         .section h2{color:#d4af37;font-size:18px;margin-bottom:15px}
         .field{margin-bottom:15px}
         .field label{color:#aaa;display:block;margin-bottom:5px;font-size:14px}
-        .field input{width:100%;padding:12px 15px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-family:'Tajawal';font-size:14px;outline:none}
-        .field input:focus{border-color:#d4af37}
+        .field input,.field select{width:100%;padding:12px 15px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-family:'Tajawal';font-size:14px;outline:none}
+        .field input:focus,.field select:focus{border-color:#d4af37}
         .btn{padding:15px;border:none;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;font-family:'Tajawal';width:100%;transition:all 0.3s}
         .btn-save{background:#d4af37;color:#000;margin-top:10px}
         .btn-save:hover{background:#b8962e}
         .btn-add{background:rgba(212,175,55,0.2);color:#d4af37;border:1px solid rgba(212,175,55,0.4);margin-bottom:15px}
         .btn-add:hover{background:rgba(212,175,55,0.3)}
-        .user-list{max-height:300px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:15px}
-        .user-item{padding:12px 15px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
+        .btn-remove{background:rgba(255,68,68,0.2);color:#ff4444;border:1px solid rgba(255,68,68,0.4);padding:8px 15px;font-size:14px;width:auto;margin-top:5px}
+        .btn-remove:hover{background:rgba(255,68,68,0.3)}
+        .user-list{max-height:400px;overflow-y:auto;border:1px solid rgba(255,255,255,0.08);border-radius:12px;margin-bottom:15px}
+        .user-item{padding:15px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all 0.2s}
         .user-item:hover{background:rgba(212,175,55,0.1)}
         .user-item.active{background:rgba(212,175,55,0.2);border-right:3px solid #d4af37}
-        .user-item span{color:#ccc}
-        .user-item.active span{color:#d4af37}
+        .user-item .user-info{flex:1}
+        .user-item .user-name{font-size:16px;font-weight:700;margin-bottom:3px;color:#ccc}
+        .user-item.active .user-name{color:#d4af37}
+        .user-item .user-bio{font-size:12px;color:#888}
         .del-btn{background:none;border:none;color:#ff4444;cursor:pointer;font-size:18px;padding:5px 10px;border-radius:8px;transition:all 0.2s}
         .del-btn:hover{background:rgba(255,68,68,0.1)}
         .toast{position:fixed;top:20px;right:50%;transform:translateX(50%);background:#d4af37;color:#000;padding:12px 30px;border-radius:50px;font-weight:700;z-index:300;opacity:0;transition:opacity 0.3s;pointer-events:none}
@@ -37,10 +41,24 @@
         .login-overlay.hidden{display:none}
         .login-overlay input{padding:15px 20px;border-radius:12px;border:1px solid rgba(212,175,55,0.4);background:rgba(255,255,255,0.05);color:#fff;font-family:'Tajawal';font-size:16px;outline:none;width:280px;text-align:center}
         .login-overlay button{padding:15px 40px;border:none;border-radius:12px;background:#d4af37;color:#000;font-weight:900;font-size:16px;cursor:pointer;font-family:'Tajawal'}
+        .social-buttons-container{margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1)}
+        .social-button-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:15px;margin-bottom:12px}
+        .social-button-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .social-button-fields .field{margin-bottom:0}
+        .icon-selector{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+        .icon-option{width:40px;height:40px;border-radius:8px;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:18px}
+        .icon-option:hover{border-color:#d4af37}
+        .icon-option.selected{border-color:#d4af37;background:rgba(212,175,55,0.2)}
+        .color-picker{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+        .color-option{width:35px;height:35px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.2s}
+        .color-option:hover{transform:scale(1.1)}
+        .color-option.selected{border-color:#fff}
+        .preview-box{background:rgba(0,0,0,0.3);border-radius:12px;padding:15px;margin-top:10px}
+        .preview-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:15px 20px;border-radius:12px;color:#fff;font-weight:700;font-size:14px;border:2px solid transparent;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,var(--c1),var(--c2)) border-box}
+        .preview-btn i{font-size:18px;width:24px;text-align:center}
     </style>
 </head>
 <body>
-    <!-- پاراستن بە وشەی نهێنی -->
     <div class="login-overlay" id="loginOverlay">
         <h1 style="color:#d4af37;margin-bottom:10px">🔒 چوونەژوورەوە</h1>
         <input type="password" id="loginPass" placeholder="وشەی نهێنی بنووسە">
@@ -53,38 +71,62 @@
         <h1>⚙️ پانێڵی بەڕێوەبردن</h1>
         <div class="counter" id="userCounter"></div>
 
-        <!-- لیستی بەکارهێنەران -->
         <div class="section">
-            <h2>📋 بەکارهێنەران</h2>
+            <h2>📋 لیستی بەکارهێنەران</h2>
             <div class="user-list" id="userList"></div>
             <button class="btn btn-add" onclick="newUser()">➕ بەکارهێنەری نوێ</button>
         </div>
 
-        <!-- فۆڕمی دەستکاری -->
         <div class="section" id="editSection" style="display:none">
             <h2 id="editTitle">✏️ دەستکاری</h2>
             <div class="field"><label>ناوی بەکارهێنەر (ID)</label><input type="text" id="fUser" placeholder="navi_user"></div>
             <div class="field"><label>ناوی پیشاندان</label><input type="text" id="fName"></div>
             <div class="field"><label>وەسف / بایۆ</label><input type="text" id="fBio"></div>
-            <div class="field"><label><i class="fab fa-facebook-f"></i> فەیسبووک</label><input type="url" id="fFacebook"></div>
-            <div class="field"><label><i class="fab fa-snapchat-ghost"></i> سناپچات</label><input type="url" id="fSnapchat"></div>
-            <div class="field"><label><i class="fab fa-instagram"></i> ئینستاگرام</label><input type="url" id="fInstagram"></div>
-            <div class="field"><label><i class="fab fa-tiktok"></i> تیکتۆک</label><input type="url" id="fTiktok"></div>
-            <div class="field"><label><i class="fab fa-telegram-plane"></i> تلێگرام</label><input type="url" id="fTelegram"></div>
-            <div class="field"><label><i class="fab fa-whatsapp"></i> واتسئەپ</label><input type="url" id="fWhatsapp"></div>
+            
+            <div class="social-buttons-container">
+                <h2 style="font-size:16px;margin-bottom:15px;color:#d4af37">🔗 دوگمەکانی سۆشیاڵ</h2>
+                <div id="socialButtonsList"></div>
+                <button class="btn btn-add" onclick="addSocialButton()" style="margin-top:10px">➕ زیادکردنی دوگمەی نوێ</button>
+            </div>
+            
             <button class="btn btn-save" onclick="saveUser()">💾 پاشەکەوتکردن</button>
         </div>
     </div>
 
     <script>
-        // ===== ڕێکخستنەکان =====
         const JSONBIN_ID = "BIN_ID_لێرە_دابنێ";
         const JSONBIN_API_KEY = "$2a$10$KEY_لێرە_دابنێ";
-        const ADMIN_PASSWORD = "kurd2026"; // وشەی نهێنی بگۆڕە!
-        // ========================
+        const ADMIN_PASSWORD = "kurd2026";
 
         let allData = {};
         let editingUser = null;
+        let currentSocialButtons = [];
+
+        const availableIcons = [
+            {name: 'facebook', icon: 'fab fa-facebook-f', color: '#1877F2'},
+            {name: 'instagram', icon: 'fab fa-instagram', color: '#E4405F'},
+            {name: 'tiktok', icon: 'fab fa-tiktok', color: '#fff'},
+            {name: 'telegram', icon: 'fab fa-telegram-plane', color: '#0088cc'},
+            {name: 'whatsapp', icon: 'fab fa-whatsapp', color: '#25D366'},
+            {name: 'snapchat', icon: 'fab fa-snapchat-ghost', color: '#FFFC00'},
+            {name: 'youtube', icon: 'fab fa-youtube', color: '#ff0000'},
+            {name: 'twitter', icon: 'fab fa-twitter', color: '#1DA1F2'},
+            {name: 'linkedin', icon: 'fab fa-linkedin-in', color: '#0A66C2'},
+            {name: 'github', icon: 'fab fa-github', color: '#fff'},
+            {name: 'discord', icon: 'fab fa-discord', color: '#5865F2'},
+            {name: 'twitch', icon: 'fab fa-twitch', color: '#9146FF'},
+            {name: 'spotify', icon: 'fab fa-spotify', color: '#1DB954'},
+            {name: 'globe', icon: 'fas fa-globe', color: '#48dbfb'},
+            {name: 'envelope', icon: 'fas fa-envelope', color: '#ff6b6b'},
+            {name: 'phone', icon: 'fas fa-phone', color: '#25D366'},
+            {name: 'link', icon: 'fas fa-link', color: '#d4af37'}
+        ];
+
+        const availableColors = [
+            '#1877F2', '#E4405F', '#fff', '#0088cc', '#25D366', '#FFFC00',
+            '#ff0000', '#1DA1F2', '#0A66C2', '#5865F2', '#9146FF', '#1DB954',
+            '#d4af37', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'
+        ];
 
         function checkLogin() {
             const pass = document.getElementById("loginPass").value;
@@ -103,7 +145,19 @@
                     headers: {"X-Master-Key": JSONBIN_API_KEY}
                 });
                 const json = await res.json();
-                allData = json.record;
+                allData = json.record || {};
+                
+                if (!allData.default) {
+                    allData.default = {
+                        name: "Kurd.System",
+                        bio: "پەیوەندیم پێوە بکە",
+                        buttons: [
+                            {id: 'btn1', name: 'فەیسبووک', icon: 'fab fa-facebook-f', color: '#1877F2', url: 'https://www.facebook.com/share/1Cx7W65eV3/'},
+                            {id: 'btn2', name: 'ئینستاگرام', icon: 'fab fa-instagram', color: '#E4405F', url: 'https://www.instagram.com/kurd.system2026'},
+                            {id: 'btn3', name: 'تیکتۆک', icon: 'fab fa-tiktok', color: '#fff', url: 'https://www.tiktok.com/@kurd.system'}
+                        ]
+                    };
+                }
                 renderUserList();
             } catch(e) {
                 showToast("❌ هەڵە لە بارکردن!");
@@ -126,10 +180,15 @@
             const users = Object.keys(allData);
             document.getElementById("userCounter").textContent = `📊 کۆی بەکارهێنەران: ${users.length}`;
             list.innerHTML = "";
+            
             users.forEach(u => {
                 const div = document.createElement("div");
                 div.className = "user-item" + (editingUser === u ? " active" : "");
-                div.innerHTML = `<span>${u === "default" ? "🌐 سەرەکی" : "👤 " + u}</span>`;
+                const userData = allData[u] || {};
+                const displayName = u === "default" ? "🌐 پەڕەی سەرەکی" : `👤 ${userData.name || u}`;
+                
+                div.innerHTML = `<div class="user-info"><div class="user-name">${displayName}</div><div class="user-bio">${userData.bio || ''}</div></div>`;
+                
                 if (u !== "default") {
                     const del = document.createElement("button");
                     del.className = "del-btn";
@@ -137,6 +196,7 @@
                     del.onclick = (e) => { e.stopPropagation(); deleteUser(u); };
                     div.appendChild(del);
                 }
+                
                 div.onclick = () => editUser(u);
                 list.appendChild(div);
             });
@@ -144,11 +204,14 @@
 
         function newUser() {
             editingUser = "__new__";
+            currentSocialButtons = [];
             document.getElementById("editSection").style.display = "block";
             document.getElementById("editTitle").textContent = "➕ بەکارهێنەری نوێ";
             document.getElementById("fUser").value = "";
             document.getElementById("fUser").disabled = false;
-            ["fName","fBio","fFacebook","fSnapchat","fInstagram","fTiktok","fTelegram","fWhatsapp"].forEach(id => document.getElementById(id).value = "");
+            document.getElementById("fName").value = "";
+            document.getElementById("fBio").value = "";
+            renderSocialButtons();
             renderUserList();
         }
 
@@ -156,18 +219,59 @@
             editingUser = user;
             const data = allData[user] || {};
             document.getElementById("editSection").style.display = "block";
-            document.getElementById("editTitle").textContent = user === "default" ? "✏️ دەستکاری سەرەکی" : `✏️ دەستکاری: ${user}`;
+            document.getElementById("editTitle").textContent = user === "default" ? "✏️ دەستکاری پەڕەی سەرەکی" : `✏️ دەستکاری: ${data.name || user}`;
             document.getElementById("fUser").value = user === "default" ? "" : user;
             document.getElementById("fUser").disabled = user === "default";
             document.getElementById("fName").value = data.name || "";
             document.getElementById("fBio").value = data.bio || "";
-            document.getElementById("fFacebook").value = data.facebook || "";
-            document.getElementById("fSnapchat").value = data.snapchat || "";
-            document.getElementById("fInstagram").value = data.instagram || "";
-            document.getElementById("fTiktok").value = data.tiktok || "";
-            document.getElementById("fTelegram").value = data.telegram || "";
-            document.getElementById("fWhatsapp").value = data.whatsapp || "";
+            currentSocialButtons = data.buttons ? [...data.buttons] : [];
+            renderSocialButtons();
             renderUserList();
+        }
+
+        function addSocialButton() {
+            currentSocialButtons.push({
+                id: 'btn_' + Date.now(),
+                name: '',
+                icon: 'fas fa-link',
+                color: '#d4af37',
+                url: ''
+            });
+            renderSocialButtons();
+        }
+
+        function removeSocialButton(index) {
+            currentSocialButtons.splice(index, 1);
+            renderSocialButtons();
+        }
+
+        function updateSocialButton(index, field, value) {
+            currentSocialButtons[index][field] = value;
+            renderSocialButtons();
+        }
+
+        function renderSocialButtons() {
+            const container = document.getElementById("socialButtonsList");
+            container.innerHTML = "";
+            
+            currentSocialButtons.forEach((btn, index) => {
+                const div = document.createElement("div");
+                div.className = "social-button-item";
+                div.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                        <span style="color:#d4af37;font-weight:700">دوگمەی ${index + 1}</span>
+                        <button class="btn btn-remove" onclick="removeSocialButton(${index})">🗑️ سڕینەوە</button>
+                    </div>
+                    <div class="social-button-fields">
+                        <div class="field"><label>ناو</label><input type="text" value="${btn.name}" onchange="updateSocialButton(${index}, 'name', this.value)"></div>
+                        <div class="field"><label>لینک</label><input type="url" value="${btn.url}" onchange="updateSocialButton(${index}, 'url', this.value)"></div>
+                    </div>
+                    <div class="field" style="margin-top:10px"><label>ئایکۆن</label><div class="icon-selector">${availableIcons.map(ic => `<div class="icon-option ${btn.icon === ic.icon ? 'selected' : ''}" onclick="updateSocialButton(${index}, 'icon', '${ic.icon}')"><i class="${ic.icon}" style="color:${ic.color}"></i></div>`).join('')}</div></div>
+                    <div class="field" style="margin-top:10px"><label>ڕەنگ</label><div class="color-picker">${availableColors.map(c => `<div class="color-option ${btn.color === c ? 'selected' : ''}" style="background:${c}" onclick="updateSocialButton(${index}, 'color', '${c}')"></div>`).join('')}</div></div>
+                    <div class="preview-box"><div style="color:#888;font-size:11px;margin-bottom:5px">پێشبینین:</div><div class="preview-btn" style="--c1:${btn.color};--c2:${btn.color}"><i class="${btn.icon}" style="color:${btn.color}"></i> ${btn.name || 'ناوی دوگمە'}</div></div>
+                `;
+                container.appendChild(div);
+            });
         }
 
         async function saveUser() {
@@ -175,15 +279,11 @@
             if (!user && editingUser === "__new__") { showToast("❌ ناوی بەکارهێنەر بنووسە!"); return; }
             if (!user) user = "default";
 
+            const validButtons = currentSocialButtons.filter(btn => btn.name && btn.url);
             allData[user] = {
                 name: document.getElementById("fName").value,
                 bio: document.getElementById("fBio").value,
-                facebook: document.getElementById("fFacebook").value,
-                snapchat: document.getElementById("fSnapchat").value,
-                instagram: document.getElementById("fInstagram").value,
-                tiktok: document.getElementById("fTiktok").value,
-                telegram: document.getElementById("fTelegram").value,
-                whatsapp: document.getElementById("fWhatsapp").value
+                buttons: validButtons
             };
 
             const ok = await saveToServer();
@@ -210,11 +310,11 @@
 
         function showToast(msg) {
             const t = document.getElementById("toast");
-            t.textContent = msg; t.classList.add("show");
+            t.textContent = msg;
+            t.classList.add("show");
             setTimeout(() => t.classList.remove("show"), 2500);
         }
 
-        // Enter بۆ چوونەژوورەوە
         document.getElementById("loginPass").addEventListener("keypress", (e) => {
             if (e.key === "Enter") checkLogin();
         });
