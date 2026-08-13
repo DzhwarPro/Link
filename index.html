@@ -1,310 +1,124 @@
 <!DOCTYPE html>
 <html lang="ckb" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kurd.System</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        html,body{
-            background:#050505;
-            min-height:100vh;
-            font-family:'Tajawal',sans-serif;
-            overflow-x:hidden;
-        }
-
-        .gradient-bg{
-            position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;
-            background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1a1a2e);
-            background-size:400% 400%;
-            animation:gradientMove 15s ease infinite;
-        }
-        @keyframes gradientMove{
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
-        }
-
-        /* بارانی ئایکۆن */
-        .rain-container{
-            position:fixed;
-            top:0;left:0;
-            width:100%;height:100%;
-            z-index:1;
-            pointer-events:none;
-            overflow:hidden;
-        }
-
-        .rain-icon{
-            position:absolute;
-            top:-60px;
-            font-size:24px;
-            opacity:0;
-            animation:rainFall linear infinite;
-            filter:drop-shadow(0 0 8px currentColor);
-        }
-
-        @keyframes rainFall{
-            0%{
-                top:-60px;
-                opacity:0;
-                transform:scale(0.5) rotate(0deg);
-            }
-            10%{
-                opacity:1;
-                transform:scale(1) rotate(0deg);
-            }
-            70%{
-                opacity:1;
-                transform:scale(1) rotate(0deg);
-            }
-            85%{
-                opacity:0.6;
-                transform:scale(1.5) rotate(10deg);
-            }
-            100%{
-                top:100vh;
-                opacity:0;
-                transform:scale(2.5) rotate(20deg);
-            }
-        }
-
-        .ri-1{left:3%;color:#1877F2;animation-duration:7s;animation-delay:0s}
-        .ri-2{left:10%;color:#FFFC00;animation-duration:8s;animation-delay:1.2s}
-        .ri-3{left:17%;color:#E4405F;animation-duration:6.5s;animation-delay:2.4s}
-        .ri-4{left:24%;color:#fff;animation-duration:9s;animation-delay:0.8s}
-        .ri-5{left:31%;color:#0088cc;animation-duration:7.5s;animation-delay:3s}
-        .ri-6{left:38%;color:#25D366;animation-duration:8.5s;animation-delay:1.8s}
-        .ri-7{left:45%;color:#ff0050;animation-duration:6s;animation-delay:4s}
-        .ri-8{left:52%;color:#1877F2;animation-duration:7.8s;animation-delay:0.5s}
-        .ri-9{left:59%;color:#FFFC00;animation-duration:8.2s;animation-delay:2s}
-        .ri-10{left:66%;color:#E4405F;animation-duration:6.8s;animation-delay:3.5s}
-        .ri-11{left:73%;color:#00f2ea;animation-duration:7.2s;animation-delay:1s}
-        .ri-12{left:80%;color:#0088cc;animation-duration:8.8s;animation-delay:2.8s}
-        .ri-13{left:87%;color:#25D366;animation-duration:6.2s;animation-delay:4.5s}
-        .ri-14{left:94%;color:#ff9ff3;animation-duration:7.6s;animation-delay:0.3s}
-
-        /* ناوەڕۆکی سەرەکی - لە ناوەڕاست */
-        .main-wrapper{
-            position:relative;
-            z-index:2;
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:20px;
-        }
-
-        .container{
-            width:100%;max-width:420px;
-            text-align:center;
-            padding:40px 25px;
-        }
-
-        h1{
-            font-size:42px;font-weight:900;
-            margin-bottom:10px;
-            background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff,#5f27cd,#ff6b6b);
-            background-size:300% 300%;
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            animation:nameGradient 4s ease infinite,nameFloat 3s ease-in-out infinite;
-        }
-        @keyframes nameGradient{
-            0%{background-position:0% 50%}
-            50%{background-position:100% 50%}
-            100%{background-position:0% 50%}
-        }
-        @keyframes nameFloat{
-            0%,100%{transform:translateY(0)}
-            50%{transform:translateY(-8px)}
-        }
-
-        .subtitle{
-            color:rgba(255,255,255,0.5);
-            font-size:14px;letter-spacing:2px;
-            margin-bottom:40px;
-        }
-
-        .social-links{display:flex;flex-direction:column;gap:16px}
-
-        .social-btn{
-            display:flex;align-items:center;justify-content:center;gap:12px;
-            padding:18px 25px;
-            border-radius:16px;
-            text-decoration:none;
-            color:#fff;font-weight:700;font-size:16px;
-            position:relative;overflow:hidden;
-            transition:all 0.4s ease;
-            animation:btnFloat 4s ease-in-out infinite;
-            background:
-                linear-gradient(#0a0a0a, #0a0a0a) padding-box,
-                linear-gradient(135deg, var(--c1), var(--c2), var(--c3), var(--c4)) border-box;
-            border:2px solid transparent;
-        }
-
-        .facebook{--c1:#1877F2;--c2:#00d2ff;--c3:#3a7bd5;--c4:#1877F2}
-        .snapchat{--c1:#FFFC00;--c2:#ffd700;--c3:#ffec8b;--c4:#FFFC00}
-        .instagram{--c1:#f09433;--c2:#e6683c;--c3:#dc2743;--c4:#bc1888}
-        .tiktok{--c1:#ff0050;--c2:#00f2ea;--c3:#ff0050;--c4:#00f2ea}
-        .telegram{--c1:#0088cc;--c2:#00d2ff;--c3:#0088cc;--c4:#00d2ff}
-        .whatsapp{--c1:#25D366;--c2:#128C7E;--c3:#25D366;--c4:#128C7E}
-
-        .social-btn:nth-child(1){animation-delay:0s}
-        .social-btn:nth-child(2){animation-delay:0.6s}
-        .social-btn:nth-child(3){animation-delay:1.2s}
-        .social-btn:nth-child(4){animation-delay:1.8s}
-        .social-btn:nth-child(5){animation-delay:2.4s}
-        .social-btn:nth-child(6){animation-delay:3s}
-
-        @keyframes btnFloat{
-            0%,100%{transform:translateY(0)}
-            50%{transform:translateY(-5px)}
-        }
-
-        .social-btn::before{
-            content:'';
-            position:absolute;top:0;left:-100%;
-            width:100%;height:100%;
-            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
-            transition:left 0.6s ease;
-        }
-        .social-btn:hover::before{left:100%}
-
-        .social-btn:hover{
-            transform:translateY(-4px) scale(1.03)!important;
-            animation-play-state:paused;
-            box-shadow:0 10px 40px rgba(255,255,255,0.1);
-        }
-
-        i{font-size:20px;width:26px;text-align:center}
-        .facebook i{color:#1877F2}
-        .snapchat i{color:#FFFC00}
-        .instagram i{color:#E4405F}
-        .tiktok i{color:#fff}
-        .telegram i{color:#0088cc}
-        .whatsapp i{color:#25D366}
-
-        .footer-line{
-            margin-top:40px;height:1px;
-            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
-        }
-        .footer-text{
-            color:rgba(255,255,255,0.3);font-size:11px;margin-top:15px;letter-spacing:2px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurd.System</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#050505;min-height:100vh;font-family:'Tajawal',sans-serif;overflow-x:hidden}
+.gradient-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1a1a2e);background-size:400% 400%;animation:g 15s ease infinite}
+@keyframes g{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.rain-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden}
+.rain-icon{position:absolute;top:-60px;font-size:24px;opacity:0;animation:r linear infinite;filter:drop-shadow(0 0 8px currentColor)}
+@keyframes r{0%{top:-60px;opacity:0;transform:scale(.5)}10%{opacity:1;transform:scale(1)}70%{opacity:1}100%{top:100vh;opacity:0;transform:scale(2.5) rotate(20deg)}}
+.ri-1{left:3%;color:#1877F2;animation-duration:7s}
+.ri-2{left:10%;color:#FFFC00;animation-duration:8s;animation-delay:1.2s}
+.ri-3{left:17%;color:#E4405F;animation-duration:6.5s;animation-delay:2.4s}
+.ri-4{left:24%;color:#fff;animation-duration:9s;animation-delay:.8s}
+.ri-5{left:31%;color:#0088cc;animation-duration:7.5s;animation-delay:3s}
+.ri-6{left:38%;color:#25D366;animation-duration:8.5s;animation-delay:1.8s}
+.ri-7{left:45%;color:#ff0050;animation-duration:6s;animation-delay:4s}
+.ri-8{left:52%;color:#1877F2;animation-duration:7.8s;animation-delay:.5s}
+.ri-9{left:59%;color:#FFFC00;animation-duration:8.2s;animation-delay:2s}
+.ri-10{left:66%;color:#E4405F;animation-duration:6.8s;animation-delay:3.5s}
+.ri-11{left:73%;color:#00f2ea;animation-duration:7.2s;animation-delay:1s}
+.ri-12{left:80%;color:#0088cc;animation-duration:8.8s;animation-delay:2.8s}
+.ri-13{left:87%;color:#25D366;animation-duration:6.2s;animation-delay:4.5s}
+.ri-14{left:94%;color:#ff9ff3;animation-duration:7.6s;animation-delay:.3s}
+.main-wrapper{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.container{width:100%;max-width:420px;text-align:center;padding:40px 25px}
+h1{font-size:42px;font-weight:900;margin-bottom:10px;background:linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#ff9ff3,#54a0ff,#5f27cd,#ff6b6b);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:n 4s ease infinite,f 3s ease-in-out infinite}
+@keyframes n{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.subtitle{color:rgba(255,255,255,.5);font-size:14px;letter-spacing:2px;margin-bottom:40px}
+.social-links{display:flex;flex-direction:column;gap:16px}
+.social-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:18px 25px;border-radius:16px;text-decoration:none;color:#fff;font-weight:700;font-size:16px;position:relative;overflow:hidden;transition:all .4s ease;animation:b 4s ease-in-out infinite;background:linear-gradient(#0a0a0a,#0a0a0a) padding-box,linear-gradient(135deg,var(--c1),var(--c2)) border-box;border:2px solid transparent}
+.social-btn:nth-child(1){animation-delay:0s}
+.social-btn:nth-child(2){animation-delay:.6s}
+.social-btn:nth-child(3){animation-delay:1.2s}
+.social-btn:nth-child(4){animation-delay:1.8s}
+.social-btn:nth-child(5){animation-delay:2.4s}
+.social-btn:nth-child(6){animation-delay:3s}
+.social-btn:nth-child(7){animation-delay:3.6s}
+.social-btn:nth-child(8){animation-delay:4.2s}
+.social-btn:nth-child(9){animation-delay:4.8s}
+.social-btn:nth-child(10){animation-delay:5.4s}
+@keyframes b{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.social-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transition:left .6s ease}
+.social-btn:hover::before{left:100%}
+.social-btn:hover{transform:translateY(-4px) scale(1.03)!important;animation-play-state:paused;box-shadow:0 10px 40px rgba(255,255,255,.1)}
+i{font-size:20px;width:26px;text-align:center}
+.footer-line{margin-top:40px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent)}
+.footer-text{color:rgba(255,255,255,.3);font-size:11px;margin-top:15px;letter-spacing:2px}
+.loading,.error{text-align:center;font-size:18px;margin-top:50px}
+.loading{color:#d4af37}
+.error{color:#ff4444}
+</style>
 </head>
 <body>
+<div class="gradient-bg"></div>
+<div class="rain-container">
+<i class="fab fa-facebook-f rain-icon ri-1"></i>
+<i class="fab fa-snapchat-ghost rain-icon ri-2"></i>
+<i class="fab fa-instagram rain-icon ri-3"></i>
+<i class="fab fa-tiktok rain-icon ri-4"></i>
+<i class="fab fa-telegram-plane rain-icon ri-5"></i>
+<i class="fab fa-whatsapp rain-icon ri-6"></i>
+<i class="fab fa-youtube rain-icon ri-7"></i>
+<i class="fab fa-facebook-messenger rain-icon ri-8"></i>
+<i class="fab fa-snapchat rain-icon ri-9"></i>
+<i class="fab fa-instagram-square rain-icon ri-10"></i>
+<i class="fab fa-tiktok rain-icon ri-11"></i>
+<i class="fab fa-telegram rain-icon ri-12"></i>
+<i class="fab fa-whatsapp-square rain-icon ri-13"></i>
+<i class="fab fa-twitter rain-icon ri-14"></i>
+</div>
+<div class="main-wrapper">
+<div class="container">
+<div id="content"><div class="loading">⏳ بارکردن...</div></div>
+<div class="footer-line"></div>
+<div class="footer-text">KURD.SYSTEM © 2026</div>
+</div>
+</div>
+<script>
+const JSONBIN_ID = "BIN_ID_لێرە";
+const JSONBIN_API_KEY = "$2a$10$KEY_لێرە";
 
-    <div class="gradient-bg"></div>
+function getUsername(){
+  const path = window.location.pathname;
+  const parts = path.split('/').filter(p => p && p !== 'Link');
+  return parts.length > 0 ? parts[parts.length - 1] : 'default';
+}
 
-    <!-- بارانی ئایکۆنەکان -->
-    <div class="rain-container">
-        <i class="fab fa-facebook-f rain-icon ri-1"></i>
-        <i class="fab fa-snapchat-ghost rain-icon ri-2"></i>
-        <i class="fab fa-instagram rain-icon ri-3"></i>
-        <i class="fab fa-tiktok rain-icon ri-4"></i>
-        <i class="fab fa-telegram-plane rain-icon ri-5"></i>
-        <i class="fab fa-whatsapp rain-icon ri-6"></i>
-        <i class="fab fa-youtube rain-icon ri-7"></i>
-        <i class="fab fa-facebook-messenger rain-icon ri-8"></i>
-        <i class="fab fa-snapchat rain-icon ri-9"></i>
-        <i class="fab fa-instagram-square rain-icon ri-10"></i>
-        <i class="fab fa-tiktok rain-icon ri-11"></i>
-        <i class="fab fa-telegram rain-icon ri-12"></i>
-        <i class="fab fa-whatsapp-square rain-icon ri-13"></i>
-        <i class="fab fa-twitter rain-icon ri-14"></i>
-    </div>
-
-    <!-- ناوەڕۆکی سەرەکی -->
-    <div class="main-wrapper">
-        <div class="container">
-            <h1 id="siteName">Kurd.System</h1>
-            <div class="subtitle" id="siteBio">پەیوەندیم پێوە بکە</div>
-
-            <div class="social-links" id="socialLinks">
-                <a href="https://www.facebook.com/share/1Cx7W65eV3/" target="_blank" class="social-btn facebook" id="btnFacebook">
-                    <i class="fab fa-facebook-f"></i> فەیسبووک
-                </a>
-                <a href="#" target="_blank" class="social-btn snapchat" id="btnSnapchat" style="display:none">
-                    <i class="fab fa-snapchat-ghost"></i> سناپچات
-                </a>
-                <a href="https://www.instagram.com/kurd.system2026?igsh=MW1tdTV6ZnAyaDBqdw==" target="_blank" class="social-btn instagram" id="btnInstagram">
-                    <i class="fab fa-instagram"></i> ئینستاگرام
-                </a>
-                <a href="https://www.tiktok.com/@kurd.system?_r=1&_t=ZS-98pkDkDfIeK" target="_blank" class="social-btn tiktok" id="btnTiktok">
-                    <i class="fab fa-tiktok"></i> تیکتۆک
-                </a>
-                <a href="#" target="_blank" class="social-btn telegram" id="btnTelegram" style="display:none">
-                    <i class="fab fa-telegram-plane"></i> تلێگرام
-                </a>
-                <a href="#" target="_blank" class="social-btn whatsapp" id="btnWhatsapp" style="display:none">
-                    <i class="fab fa-whatsapp"></i> واتسئەپ
-                </a>
-            </div>
-
-            <div class="footer-line"></div>
-            <div class="footer-text">KURD.SYSTEM © 2026</div>
-        </div>
-    </div>
-
-    <script>
-        // ===== ڕێکخستنەکان - هەمان شتی admin =====
-        const JSONBIN_ID = "BIN_ID_لێرە_دابنێ";
-        const JSONBIN_API_KEY = "$2a$10$KEY_لێرە_دابنێ";
-        // ============================================
-
-        async function loadFromAdmin() {
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`, {
-                    headers: {"X-Master-Key": JSONBIN_API_KEY}
-                });
-                const json = await res.json();
-                const data = json.record;
-
-                // ئەگەر داتای "default" هەبێت، لینکەکان نوێ بکەوە
-                if (data && data.default) {
-                    const d = data.default;
-
-                    if (d.name) document.getElementById('siteName').textContent = d.name;
-                    if (d.bio) document.getElementById('siteBio').textContent = d.bio;
-
-                    if (d.facebook) {
-                        document.getElementById('btnFacebook').href = d.facebook;
-                        document.getElementById('btnFacebook').style.display = 'flex';
-                    }
-                    if (d.snapchat) {
-                        document.getElementById('btnSnapchat').href = d.snapchat;
-                        document.getElementById('btnSnapchat').style.display = 'flex';
-                    }
-                    if (d.instagram) {
-                        document.getElementById('btnInstagram').href = d.instagram;
-                        document.getElementById('btnInstagram').style.display = 'flex';
-                    }
-                    if (d.tiktok) {
-                        document.getElementById('btnTiktok').href = d.tiktok;
-                        document.getElementById('btnTiktok').style.display = 'flex';
-                    }
-                    if (d.telegram) {
-                        document.getElementById('btnTelegram').href = d.telegram;
-                        document.getElementById('btnTelegram').style.display = 'flex';
-                    }
-                    if (d.whatsapp) {
-                        document.getElementById('btnWhatsapp').href = d.whatsapp;
-                        document.getElementById('btnWhatsapp').style.display = 'flex';
-                    }
-                }
-            } catch(e) {
-                // ئەگەر هەڵە هەبوو، لینکە ڕەسەنەکان دەمێننەوە (هیچ ناگۆڕێت)
-                console.log("Admin data not loaded, using default links");
-            }
-        }
-
-        loadFromAdmin();
-    </script>
-
+async function load(){
+  const username = getUsername();
+  const c = document.getElementById('content');
+  try{
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_ID}/latest`,{headers:{"X-Master-Key":JSONBIN_API_KEY}});
+    const j = await r.json();
+    const d = j.record;
+    if(!d || !d[username]){
+      c.innerHTML='<div class="error">❌ بەکارهێنەر نەدۆزرایەوە</div>';
+      document.title='Not Found - Kurd.System';
+      return;
+    }
+    const u = d[username];
+    document.title = (u.name||username)+' - Kurd.System';
+    let btns='';
+    if(u.buttons){
+      u.buttons.forEach((b,i)=>{
+        btns+=`<a href="${b.url}" target="_blank" class="social-btn" style="--c1:${b.color};--c2:${b.color};animation-delay:${i*0.6}s"><i class="${b.icon}" style="color:${b.color}"></i> ${b.name}</a>`;
+      });
+    }
+    c.innerHTML=`<h1>${u.name||username}</h1><div class="subtitle">${u.bio||''}</div><div class="social-links">${btns}</div>`;
+  }catch(e){
+    c.innerHTML='<div class="error">❌ هەڵە لە بارکردن</div>';
+  }
+}
+load();
+</script>
 </body>
 </html>
